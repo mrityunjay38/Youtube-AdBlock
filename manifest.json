@@ -1,5 +1,4 @@
 {
-  "_comment": "Chrome extension version 3 manifest reference link - https://developer.chrome.com/docs/extensions/mv3/getstarted/development-basics/",
   "manifest_version": 3,
   "name": "Youtube AdBlock",
   "description": "A simple chrome extension to block Youtube video ads previews for personal usage, since a third-party extension may or may not be prone to attackers and exploits.",
@@ -11,5 +10,19 @@
   },
   "background": {
     "service_worker": "serviceWorker.js"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["app.js", "inject.js"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "run_at": "document_start",
+      "all_frames": true,
+      "js": ["app.js"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ]
 }
