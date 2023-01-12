@@ -12,8 +12,16 @@ before an actual video that user is trying to stream/play.
 */
 
 ((originalFetch) => {
+  const targetUrl = "/youtubei/v1/player";
+
   window.fetch = async (...args) => {
     let response = await originalFetch(...args);
+    const { url } = response;
+
+    if (!url?.includes(targetUrl)) {
+      return response;
+    }
+
     const stringReplacementMap = {
       adPlacements: "adPlacementRemoved",
       playerAds: "playerAdsRemoved",
