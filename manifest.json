@@ -3,7 +3,7 @@
   "name": "Youtube AdBlock",
   "description": "A simple chrome extension to block Youtube video ads previews for personal usage, since a third-party extension may or may not be prone to attackers and exploits.",
   "version": "1.1",
-  "permissions": ["activeTab", "tabs", "idle"],
+  "permissions": ["activeTab", "tabs", "idle", "declarativeNetRequest"],
   "host_permissions": ["*://*/*"],
   "action": {
     "default_title": "YouTube AdBlock"
@@ -14,7 +14,7 @@
   "web_accessible_resources": [
     {
       "resources": ["app.js", "inject.js"],
-      "matches": ["*://*.youtube.com/*"]
+      "matches": ["*://*/*"]
     }
   ],
   "content_scripts": [
@@ -24,5 +24,14 @@
       "js": ["app.js"],
       "matches": ["*://*.youtube.com/*"]
     }
-  ]
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleSet",
+        "enabled": true,
+        "path": "networkRules.json"
+      }
+    ]
+  }
 }
