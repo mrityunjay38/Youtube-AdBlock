@@ -11,6 +11,11 @@ Removing these shall interrupt short video advertisment previews that appear
 before an actual video that user is trying to stream/play.
 */
 
+const stringReplacementMap = {
+  adPlacements: "adPlacementRemoved",
+  playerAds: "playerAdsRemoved",
+};
+
 ((originalFetch) => {
   const targetUrl = "/youtubei/v1/player";
 
@@ -21,11 +26,6 @@ before an actual video that user is trying to stream/play.
     if (!url?.includes(targetUrl)) {
       return response;
     }
-
-    const stringReplacementMap = {
-      adPlacements: "adPlacementRemoved",
-      playerAds: "playerAdsRemoved",
-    };
 
     /* Modifying both json() as well text() response methods to be double sure */
     const json = () =>
@@ -49,3 +49,33 @@ before an actual video that user is trying to stream/play.
     return response;
   };
 })(window.fetch);
+
+((XHR) => {
+  const mySend = XHR.send;
+  const myOpen = XHR.open;
+  XHR.open = function theOpen(...args) {
+    if (args.length > 1) {
+      [, this.url] = args;
+    } else {
+      this.url = "";
+    }
+    return myOpen.apply(this, args);
+  };
+  XHR.send = function theSend(...args) {
+    if (this.url.includes("youtubei/v1/player" || "/watch?=")) {
+      this.addEventListener("load", function eventHandler() {
+        try {
+          this.response = this.response.replace(
+            /adPlacements|playerAds/gi,
+            (substring) => {
+              return stringReplacementMap[substring];
+            }
+          );
+        } catch (err) {
+          console.log("err", err);
+        }
+      });
+    }
+    return mySend.apply(this, args);
+  };
+})(window.XMLHttpRequest.prototype);
