@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Youtube AdBlock",
   "description": "A simple chrome extension to block Youtube video ads previews for personal usage, since a third-party extension may or may not be prone to attackers and exploits.",
-  "version": "1.1",
+  "version": "1.2",
   "permissions": ["activeTab", "tabs", "idle", "declarativeNetRequest"],
   "host_permissions": ["*://*/*"],
   "action": {
