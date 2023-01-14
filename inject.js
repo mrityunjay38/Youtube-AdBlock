@@ -16,6 +16,7 @@ const stringReplacementMap = {
   playerAds: "playerAdsRemoved",
 };
 
+/* Monkey patch window.fetch */
 ((originalFetch) => {
   const targetUrl = "/youtubei/v1/player";
 
@@ -50,6 +51,7 @@ const stringReplacementMap = {
   };
 })(window.fetch);
 
+/* Monkey patch XMLHttpRequest */
 ((XHR) => {
   const mySend = XHR.send;
   const myOpen = XHR.open;
@@ -79,3 +81,26 @@ const stringReplacementMap = {
     return mySend.apply(this, args);
   };
 })(window.XMLHttpRequest.prototype);
+
+/* Monkey patch Object getter/setter */
+((window) => {
+  let currentDescriptor = Object.getOwnPropertyDescriptor(
+    window,
+    "ytInitialPlayerResponse"
+  );
+  let ytInitialPlayerResponseWrapped;
+
+  if (!currentDescriptor) {
+    currentDescriptor = {
+      configurable: true,
+      get() {
+        return ytInitialPlayerResponseWrapped;
+      },
+      set(newValue) {
+        newValue = { ...newValue, adPlacements: [], playerAds: [] };
+        ytInitialPlayerResponseWrapped = newValue;
+      },
+    };
+  }
+  Object.defineProperty(window, "ytInitialPlayerResponse", currentDescriptor);
+})(window);
