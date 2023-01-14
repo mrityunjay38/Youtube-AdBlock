@@ -9,6 +9,13 @@ Params: ["adPlacements", "playerAds"]
 
 Removing these shall interrupt short video advertisment previews that appear
 before an actual video that user is trying to stream/play.
+
+---------------------------------------------------------------------------------------
+
+var ytInitialPlayerResponse = {}
+https://www.youtube.com/watch?v=nbxxywixxehirwr initially return HTML containing ytInitialPlayerResponse already defined.
+Overidding this using Object.setter method to remove advertisement config ex: adPlacements, playerAds.
+
 */
 
 const stringReplacementMap = {
